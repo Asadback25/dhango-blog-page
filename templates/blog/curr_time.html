@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Current Time</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg-1: #071028;
+      --bg-2: #19183B;
+      --accent: #708993;
+      --muted: #bfc9cf;
+      --fw-sans: Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--fw-sans);
+      background: linear-gradient(160deg, var(--bg-1), var(--bg-2));
+      color: #e9f1f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    p {
+      color: var(--muted);
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+
+    .clock {
+      font-size: 60px;
+      font-weight: bold;
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .clock:hover {
+      transform: scale(1.05);
+    }
+
+    a.back {
+      margin-top: 40px;
+      display: inline-block;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #19183B, var(--accent));
+      color: #fff;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      transition: background 0.3s;
+    }
+
+    a.back:hover {
+      background: linear-gradient(90deg, var(--accent), #19183B);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⏰ Current Time</h1>
+  <p>Hozirgi vaqt real vaqtda yangilanib turadi:</p>
+
+  <div class="clock" id="clock">--:--:--</div>
+
+  <a href="{% url 'index' %}" class="back">⬅ Orqaga qaytish</a>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const timeStr = new Intl.DateTimeFormat('uz-UZ', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone: 'Asia/Samarkand'
+      }).format(now);
+
+      document.getElementById('clock').textContent = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+
+</body>
+</html>

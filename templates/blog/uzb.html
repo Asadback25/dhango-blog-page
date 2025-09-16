@@ -1,0 +1,434 @@
+{% load static %}
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Oʻzbekiston — Batafsil guide — UZB.CODERBOYS</title>
+  <meta name="description" content="Oʻzbekiston: geografiya, tarix, demografiya, iqtisodiyot, madaniyat, sayyohlik va amaliy ma'lumotlar — to‘liq, kengaytirilgan guide.">
+
+  <style>
+    /* ===== Theme & typography ===== */
+    :root{
+      --bg-1: #051126;
+      --bg-2: #0b2a47;
+      --glass: rgba(255,255,255,0.03);
+      --muted: #9fb0c2;
+      --accent: #79c7a0;
+      --accent-2: #5fb3ff;
+      --text: #eaf6fc;
+      --maxw: 1250px;
+      --radius:16px;
+      --fw: Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--fw);
+      background: radial-gradient(900px 400px at 10% 10%, rgba(95,179,255,0.04), transparent),
+                  linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.65;
+      padding:28px 18px;
+    }
+
+    .wrap{
+      max-width:var(--maxw);
+      margin:0 auto;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border-radius:20px;
+      padding:30px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 20px 60px rgba(2,6,23,0.6);
+    }
+
+    /* Hero */
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:28px;
+      align-items:center;
+      margin-bottom:26px;
+    }
+    .hero-left h1{
+      margin:0;
+      font-size:44px;
+      line-height:1.02;
+      letter-spacing:-0.6px;
+      color:var(--accent);
+      font-weight:800;
+    }
+    .hero-left p.lead{
+      margin:14px 0 0 0;
+      color:var(--muted);
+      font-size:16px;
+      max-width:900px;
+    }
+
+    .hero-right{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      padding:18px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+      text-align:center;
+    }
+    .hero-right h3{ margin:0 0 8px 0; color:#fff; font-size:18px; }
+    .hero-right p{ margin:0; color:var(--muted); font-size:14px; }
+
+    /* TOC */
+    .toc{
+      margin:20px 0 28px 0;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .toc a{
+      background:rgba(255,255,255,0.02);
+      padding:8px 12px;
+      border-radius:999px;
+      text-decoration:none;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.02);
+      font-weight:700;
+      font-size:13px;
+      transition: all .18s;
+    }
+    .toc a:hover{ transform: translateY(-4px); color:var(--text); background: linear-gradient(90deg,var(--accent),var(--accent-2)); }
+
+    /* Layout */
+    .content{
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:30px;
+      align-items:start;
+    }
+
+    main.article{
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      padding:20px 22px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    /* Section headings */
+    .section{
+      margin-bottom:26px;
+      padding-bottom:12px;
+      border-bottom:1px dashed rgba(255,255,255,0.03);
+    }
+    h2{
+      margin:0 0 10px 0;
+      font-size:24px;
+      color:var(--text);
+    }
+    h3{ margin:14px 0 8px 0; font-size:18px; color:var(--accent); }
+
+    p, li { color:var(--text); font-size:15px; }
+
+    /* Highlight boxes */
+    .callout{
+      background: linear-gradient(90deg, rgba(121,199,160,0.06), rgba(95,179,255,0.02));
+      padding:12px;
+      border-left:4px solid var(--accent);
+      border-radius:10px;
+      margin:12px 0;
+      color:var(--muted);
+    }
+
+    /* City grid */
+    .city-grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    .city{
+      background:var(--glass);
+      border-radius:10px;
+      padding:10px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .city h4{ margin:0 0 6px 0; color:var(--accent-2); }
+
+    /* Sidebar */
+    aside.sidebar{ position:sticky; top:28px; }
+    .card{
+      background: var(--card-bg);
+      border-radius:12px;
+      padding:16px;
+      border:1px solid rgba(255,255,255,0.03);
+      margin-bottom:16px;
+    }
+    .fact{ display:flex; justify-content:space-between; gap:12px; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.02); }
+    .fact:last-child{ border-bottom:none; }
+
+    /* Table for quick facts */
+    table.quick {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+    }
+    table.quick td{ padding:8px 6px; vertical-align:top; color:var(--muted); }
+    table.quick td.key{ color:var(--text); font-weight:700; width:42%; }
+
+    /* Footer CTA */
+    .cta{ text-align:center; margin-top:20px; }
+    .btn {
+      display:inline-block;
+      padding:12px 20px;
+      border-radius:12px;
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#02222b;
+      text-decoration:none;
+      font-weight:800;
+      margin:8px;
+    }
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .hero{ grid-template-columns: 1fr; }
+      .content{ grid-template-columns: 1fr; }
+      .city-grid{ grid-template-columns: 1fr; }
+      .hero-right{ order:2; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- HERO -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero-left">
+        <h1>Oʻzbekiston Respublikasi — Toʻliq, kengaytirilgan guide</h1>
+        <p class="lead">
+          Bu sahifa Oʻzbekistonning geografiyasi, tarixi, jamiyati, iqtisodiyoti, madaniyati va sayyohlik imkoniyatlari haqida chuqur va ishonchli maʼlumot beradi.
+          Har bir bobda toʻliq tavsiflar, amaliy maslahatlar va qisqacha tez faktlar keltirilgan.
+        </p>
+
+        <nav class="toc" aria-label="Table of contents">
+          <a href="#overview">Umumiy</a>
+          <a href="#geography">Geografiya</a>
+          <a href="#demographics">Aholi</a>
+          <a href="#history">Tarix</a>
+          <a href="#economy">Iqtisodiyot</a>
+          <a href="#culture">Madaniyat</a>
+          <a href="#tourism">Turizm</a>
+          <a href="#environment">Atrof-muhit</a>
+          <a href="#practical">Amaliy ma'lumot</a>
+        </nav>
+      </div>
+
+      <aside class="hero-right" aria-hidden="false">
+        <h3>Tez faktlar</h3>
+        <p style="margin-top:8px;color:var(--muted)">
+          Maydon: <strong>~448,978 km²</strong><br>
+          Aholi: <strong>≈ 36–38 million</strong> (2024–2025 baholari turli manbalarda).<br>
+          Poytaxt: <strong>Toshkent</strong><br>
+          Rasmiy til: <strong>Oʻzbek</strong>
+        </p>
+        <div style="margin-top:12px">
+          <a class="btn" href="#tourism">Sayyohlikni boshlash</a>
+        </div>
+      </aside>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+      <!-- ARTICLE -->
+      <main class="article" role="main">
+        <!-- OVERVIEW -->
+        <section id="overview" class="section">
+          <h2>Umumiy maʼlumot</h2>
+          <p>
+            Oʻzbekiston (rəsmi: Oʻzbekiston Respublikasi) — Markaziy Osiyoda joylashgan davlat. Maydoni taxminan <strong>448,978 km²</strong> va 2024–2025 yillarda aholisi 36–38 million atrofida hisoblanadi.
+            Toshkent poytaxti sifatida siyosiy, madaniy va iqtisodiy markaz rolini bajaradi. Mamlakat tarixan Ipak yoʻli savdo-suhbatlarining markaziy hududlaridan biri boʻlgan, bugungi kunda esa tarixiy meros va zamonaviy infratuzilmalar uygʻunlashgan.
+          </p>
+        </section>
+
+        <!-- GEOGRAPHY -->
+        <section id="geography" class="section">
+          <h2>Geografiya va tabiiy xususiyatlar</h2>
+          <p>
+            Oʻzbekiston — ikki tomondan ham quruq davlatlar bilan o‘ralgan yagona davlatlardan biridir (double landlocked). Shimolda Qozogʻiston, sharqda Qirgʻiziston va Tojikiston, janubda Afgʻoniston, gʻarbda Turkmaniston bilan chegara tutadi. Mamlakat hududi choʻllar (masalan Qizilqum), dashtlar, togʻlar va unumdor vodiylarni (Fargʻona vodiysi) oʻz ichiga oladi.
+          </p>
+
+          <h3>Relyef va suv resurslari</h3>
+          <p>
+            Asosiy daryolar — Amudaryo va Sirdaryo. Sovet davrida amalga oshirilgan sugʻorish loyihalari Aral dengizining qurib qolishiga olib keldi — bu mintaqaviy ekologik favqulodda holat hisoblanadi (Aral muammosi haqida alohida bobda). Qizilqum sahrosi mamlakatning katta qismini egallaydi, togʻli hududlar esa shimolda va janubi-sharqda bir qator choʻkindi va eroziya zanjirlarini hosil qiladi.
+          </p>
+        </section>
+
+        <!-- DEMOGRAPHICS -->
+        <section id="demographics" class="section">
+          <h2>Aholi va jamiyat</h2>
+          <p>
+            Oʻzbekiston Markaziy Osiyoning eng ko‘p aholiga ega davlatidir. Aholining katta qismi oʻzbek millatiga mansub; shuningdek tojiklar, qozogʻlar, qoraqalpoqlar, ruslar va boshqa millatlar mavjud.
+            Aholi tuzilishi nisbatan yosh: yoshlarda ishchi kuchi va demografik imkoniyatlar yuqori. Shuningdek, shaharlar (Toshkent, Namangan, Samarkand, Buxoro va boshqalar) markaziy ahamiyatga ega va tez urbanizatsiya jarayoni kuzatilmoqda.
+          </p>
+
+          <h3>Til va din</h3>
+          <p>
+            Rasmiy til — oʻzbek; rus tili deyarli barcha katta shaharlar va maorif muassasalarida keng tarqalgan. Dinga kelsak, aholi orasida islam keng tarqalgan, shu bilan birga sekulyar davlat tuzilmasi mavjud va diniy amaliyotlar mahalliy anʼanalarga mos ravishda olib boriladi.
+          </p>
+        </section>
+
+        <!-- HISTORY -->
+        <section id="history" class="section">
+          <h2>Tarixiy xronologiya — qadim davrlardan mustaqillikkacha</h2>
+          <p>
+            Oʻzbekiston hududi miloddan avvalgi davrlardan beri aholiga ega: qadimiy Sogʻd, Xorazm va Buxoro markazlari savdo, ilm va madaniyat markazlari boʻlgan. Ipak yoʻli orqali Sharq va Gʻarb orasidagi almashinuv bu hududni qadimdan rivojlantirgan.
+          </p>
+
+          <h3>Temuriylar davri</h3>
+          <p>
+            XIV asrda Amir Temur (Timur) boshchiligida Samarkand markaziy ilmiy va madaniy markazga aylangan. Ushbu davrda qurilgan madrasa, masjid va rasadxona kabi yodgorliklar bugungi kunda ham dunyo miqyosida qadrlanadi.
+          </p>
+
+          <h3>Sovet va mustaqillik</h3>
+          <p>
+            20-asr boshida hudud Rossiya imperiyasi tarkibiga kirdi, keyinchalik Sovet Ittifoqi tarkibida oʻzaro iqtisodiy integratsiya va sotsial transformatsiyalar ro‘y berdi. 1991-yilda Oʻzbekiston mustaqillikka erishdi — bundan keyin siyosiy, iqtisodiy va madaniy yangilanishlar boshlangan.
+          </p>
+        </section>
+
+        <!-- ECONOMY -->
+        <section id="economy" class="section">
+          <h2>Iqtisodiyot — asosiy sektorlar va tendensiyalar</h2>
+          <p>
+            Oʻzbekiston iqtisodiyoti ko‘p tarmoqli: qishloq xoʻjaligi (ayniqsa paxta), konchilik (oltin, mis, uran), energetika (gaz) va ishlab chiqarish sanoati asosiy daromad manbalaridandir.
+            Oxirgi yillarda hukumat iqtisodiy liberallashtirish va investitsiyalarni jalb qilishga qaratilgan islohotlar olib bormoqda. (xususan chet el investitsiyalari va infratuzilmaviy loyihalar).
+          </p>
+
+          <h3>Makro-ko‘rsatkichlar (qisqacha)</h3>
+          <p>
+            GDP va GDP per capita kabi asosiy moliyaviy ko'rsatkichlar World Bank va IMF statistikalarida qayd etiladi — iqtisodiyot barqaror oʻsish fazasida va eksport hamda ichki isteʼmolni oshirish tarafida harakat qilinmoqda.
+          </p>
+
+          <div class="callout">
+            <strong>Asosiy eksportlar:</strong> paxta va paxta mahsulotlari, oltin va boshqa minerallar, gaz, to‘qimachilik va ayrim qishloq xo‘jalik mahsulotlari.
+          </div>
+        </section>
+
+        <!-- CULTURE -->
+        <section id="culture" class="section">
+          <h2>Madaniyat, hunarmandchilik va urf-odatlar</h2>
+          <p>
+            Oʻzbekiston boy madaniyatga ega: maqom va kuy kabi musiqiy anʼanalar, rang-barang hunarmandchilik (gilam, zardoʻzlik, keramika), hamda arxitektura — bularning barchasi xalq hayotida muhim o‘rin tutadi.
+          </p>
+
+          <h3>Tadbirlar va bayramlar</h3>
+          <p>
+            Navroʻz (bahor bayrami) — eng muhim bayramlardan biri; mahalliy hududiy festival va xalq qoʻshiqlari ham keng nishonlanadi. Milliy kiyim va hunarmandchilik sovgʻalari sayyohlar orasida ommabopdir.
+          </p>
+
+          <h3>Oʻzbek oshxonasi</h3>
+          <p>
+            Plov — markaziy milliy taom: guruch, goʻsht va sabzavotlardan tayyorlanadi; somsa, manti, lagʻmon, shashlik va turli shoʻrvalar keng tarqalgan. Non hurmati va dasturxon madaniyati juda muhim.
+          </p>
+        </section>
+
+        <!-- TOURISM -->
+        <section id="tourism" class="section">
+          <h2>Sayyohlik va diqqatga sazovor joylar</h2>
+          <p>
+            Oʻzbekistonning tarixiy markazlari — Samarkand, Buxoro, Xiva — UNESCO merosiga kiritilgan va ular Ipak yoʻlining beqiyos yodgorliklarini saqlab qolgan. Registon, Shohi-Zinda, Ark va Itchan-Qalʼa kabi joylar turistlar uchun markaziy yoʻnalishlardir.
+          </p>
+
+          <div class="city-grid" aria-hidden="false">
+            <div class="city">
+              <h4>Samarkand</h4>
+              <p>Registon ansambli, Ulugʻbek rasadxona, qadimiy madrasalar va mozaikalar bilan mashhur.</p>
+            </div>
+            <div class="city">
+              <h4>Buxoro</h4>
+              <p>Qadimiy savdo markazi: Ark, Poi Kalon majmuasi, tarixiy bozorlar.</p>
+            </div>
+            <div class="city">
+              <h4>Xiva (Itchan-Qalʼa)</h4>
+              <p>Hammasi saqlangan qadimiy shaharcha, devorlar va minora ansambllari.</p>
+            </div>
+            <div class="city">
+              <h4>Toshkent</h4>
+              <p>Zamonaviy poytaxt — metro, muzeylar, bozorlar va zamonaviy infratuzilma.</p>
+            </div>
+          </div>
+
+          <p style="margin-top:10px;">
+            Sayohat uchun eng qulay davr bahor va kuz: ob-havo yoqimli, sayyohlik mavsumi toʻliq. Yozda janubiy va choʻl hududlarida juda issiq boʻlishi mumkin.
+          </p>
+        </section>
+
+        <!-- ENVIRONMENT -->
+        <section id="environment" class="section">
+          <h2>Atrof-muhit va Aral dengizi muammosi</h2>
+          <p>
+            XX asrda amalga oshirilgan sugʻorish loyihalari Aral dengizining keskin kamayishiga olib keldi — bu butun mintaqa uchun ekologik va ijtimoiy inqiroz yuzaga keltirdi. Oxirgi yillarda tiklashga qaratilgan loyihalar, daryolarni boshqarish va ob-muhitni tiklash borasida ham xalqaro va hududiy tashabbuslar amalga oshirilmoqda.
+          </p>
+
+          <p>
+            Qayd etish joizki, Aral muammosi nafaqat ekologik (shoʻrlanish, yer degradatsiyasi) balki aholining salomatligi va iqtisodiyotiga ham taʼsir koʻrsatdi; tiklash ishlari baʼzi hududlarda qisman samara bermoqda, lekin global va regional choralar talab etiladi.
+          </p>
+        </section>
+
+        <!-- PRACTICAL -->
+        <section id="practical" class="section">
+          <h2>Amaliy maʼlumotlar — sayohat va xulosa</h2>
+          <h3>Viza va kirish</h3>
+          <p>
+            Oʻzbekiston bir qator davlatlar uchun elektron viza va soddalashtirilgan rejimlar joriy etgan. Rasmiy konsullik va hukumat saytlaridan yangilangan maʼlumotlarni tekshirish zarur.
+          </p>
+
+          <h3>Valyuta va toʻlovlar</h3>
+          <p>
+            Milliy valyuta — soʻm (UZS). Katta shaharlarda kartalar qabul qilinadi; chekka hududlarda naqd pul talab etiladi. Bankomatlar katta shaharlarda keng tarqalgan.
+          </p>
+
+          <h3>Xavfsizlik</h3>
+          <p>
+            Umuman olganda sayyohlar uchun xavfsiz deb hisoblanadi, biroq har doim shaxsiy buyumlar, rasmiy manbalarni kuzatish va mahalliy qoidalarga rioya qilish tavsiya etiladi.
+          </p>
+        </section>
+
+        <section class="cta">
+          <a href="{% url 'index' %}" class="btn">⬅ Asosiy menyuga qaytish</a>
+          <a href="{% url 'time' %}" class="btn">Soat sahifasiga o'tish</a>
+        </section>
+
+      </main>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="card">
+          <h3>Eng muhim faktlar</h3>
+          <div class="fact"><div>Maydon</div><div>≈ 448,978 km²</div></div>
+          <div class="fact"><div>Aholi</div><div>≈ 36–38 mln (2024–25)</div></div>
+          <div class="fact"><div>Poytaxt</div><div>Toshkent</div></div>
+          <div class="fact"><div>Rasmiy til</div><div>Oʻzbek</div></div>
+        </div>
+
+        <div class="card">
+          <h3>UNESCO & diqqatga sazovor</h3>
+          <ul style="padding-left:18px;color:var(--text);margin:8px 0 0 0">
+            <li>Samarkand — Registon va Shohi-Zinda</li>
+            <li>Buxoro — tarixiy markaz</li>
+            <li>Xiva — Itchan-Qalʼa</li>
+            <li>Western Tien-Shan (tabiiy)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Maqola manbalari (qisqacha)</h3>
+          <p style="color:var(--muted);font-size:13px">Asosiy rasmiy va ishonchli manbalar: Wikipedia, UNESCO, World Bank, IMF, Earth.org va AP yangiliklari.</p>
+        </div>
+
+      </aside>
+    </div>
+
+    <footer style="margin-top:30px;color:var(--muted);font-size:14px">
+      © 2025 UZB.CODERBOYS — Bu sahifa umumiy maʼlumot uchun moʻljallangan. Rasmiy yangiliklar va viza/hamda sogʻliq masalalari uchun rasmiy hukumat va konsullik manbalariga murojaat qiling.
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,385 @@
+{% load static %}
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Device — UZB.CODERBOYS</title>
+
+  <style>
+    :root{
+      --bg-1:#071028;
+      --bg-2:#0f2740;
+      --card:#0b1220;
+      --accent:#708993;
+      --muted:#bfc9cf;
+      --glass: rgba(255,255,255,0.03);
+      --radius:14px;
+      --fw: Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:var(--fw);
+      background: linear-gradient(160deg,var(--bg-1),var(--bg-2));
+      color:#eaf4f8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:980px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      padding:22px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 20px 60px rgba(2,6,23,0.6);
+    }
+
+    header{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px;}
+    header h1{ margin:0; font-size:20px; letter-spacing:-0.2px; }
+    header p{ margin:0; color:var(--muted); font-size:13px; }
+
+    .controls{ display:flex; gap:10px; align-items:center; }
+    .btn{
+      background: linear-gradient(90deg,var(--accent), #66a6ff);
+      color:#042028;
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 8px 24px rgba(43,107,99,0.07);
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card{
+      background: var(--card);
+      border-radius:12px;
+      padding:18px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+    }
+
+    .main-card .row{ display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:14px; }
+    .label{ color:var(--muted); font-size:13px; }
+    .value{ font-weight:800; color:#fff; font-size:16px; }
+
+    pre.ua{
+      white-space:pre-wrap;
+      word-wrap:break-word;
+      background:rgba(255,255,255,0.02);
+      padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);
+      color:var(--muted); font-size:13px;
+    }
+
+    .small{ font-size:13px; color:var(--muted); }
+
+    aside.sidebar .meta{ margin-bottom:12px }
+    .pill{ display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.02); color:var(--muted); font-weight:700; font-size:13px; }
+
+    .status { margin-bottom:12px; color:var(--muted); font-size:13px; }
+
+    footer{ margin-top:18px; text-align:right; }
+    a.back{ color:var(--muted); text-decoration:none; font-weight:700; }
+
+    /* responsive */
+    @media (max-width:960px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Device info — UZB.CODERBOYS</h1>
+        <p>Foydalanuvchi ruxsati asosida qurilmangiz haqidagi to‘liq maʼlumot.</p>
+      </div>
+
+      <div class="controls">
+        <button id="ask-perms" class="btn">Ruxsat so'rash</button>
+        <button id="detect-basic" class="btn ghost">Tez aniqlash</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- main -->
+      <main class="card main-card" id="main">
+        <div class="status" id="status">Holat: kutilyapti — "Ruxsat so'rash" tugmasini bosing yoki "Tez aniqlash".</div>
+
+        <div class="row">
+          <div class="label">Qurilma turi</div>
+          <div class="value" id="device-type">—</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Operatsion tizim</div>
+          <div class="value" id="os">—</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Brauzer</div>
+          <div class="value" id="browser">—</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Ekran</div>
+          <div class="value" id="screen">—</div>
+        </div>
+
+        <div class="row">
+          <div class="label">Tarmoq (navigator.connection)</div>
+          <div class="value" id="netinfo">—</div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="label">Javob vaqtlari (local time / timezone)</div>
+          <div class="small" id="timeinfo">—</div>
+        </div>
+
+        <section style="margin-top:14px">
+          <div class="label">User-Agent (to‘liq)</div>
+          <pre class="ua" id="ua">—</pre>
+        </section>
+
+        <section style="margin-top:14px">
+          <div class="label">Public IP</div>
+          <div class="value" id="ip">—</div>
+          <div class="small" id="ip-note"></div>
+        </section>
+
+        <section style="margin-top:14px">
+          <div class="label">Qo‘shimcha ruxsatlar</div>
+          <div class="small" id="perms-list">- geolocation: not requested</div>
+        </section>
+
+        <div style="margin-top:16px">
+          <button id="request-geo" class="btn ghost">Joylashuv uchun ruxsat so‘rash</button>
+          <button id="request-media" class="btn ghost">Kamera / Mikrofon uchun ruxsat (sinov)</button>
+        </div>
+      </main>
+
+      <!-- sidebar -->
+      <aside class="card sidebar">
+        <div class="meta">
+          <div class="pill">Foydalanuvchi ma'lumotlari</div>
+        </div>
+
+        <div class="meta">
+          <div class="label">HTTP Xabarlar</div>
+          <div class="small">REMOTE_ADDR va HEADERS serverda ham olinadi (server-side)</div>
+        </div>
+
+        <div class="meta">
+          <div class="label">Xavfsizlik</div>
+          <div class="small">Agar foydalanuvchi ruxsat bermasa, geolocation va media kirish imkoniyati bo‘lmaydi.</div>
+        </div>
+
+        <div style="margin-top:14px">
+          <a class="pill" href="{% url 'index' %}">⬅ Asosiy menyuga qaytish</a>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <a class="back" href="{% url 'index' %}">🏠 Bosh sahifaga</a>
+    </footer>
+  </div>
+
+<script>
+/*
+  JS maqsadi:
+  - Tez aniqlash: ruxsat so‘ramasdan olinadigan ma'lumotlarni chiqaradi
+  - Ruxsat so'rash: permissions API yordamida geolocation va camera/microphone ruxsatlarini so'raydi
+  - Public IP olish: tashqi API (api.ipify.org) orqali — agar kerak bo'lsa o'zgartiring
+  - Qo'shimcha: agar user_agentData mavjud bo'lsa undan foydalanamiz
+*/
+
+function detectBasic() {
+  // device type
+  const ua = navigator.userAgent || 'Unknown';
+  const uaData = navigator.userAgentData || null;
+  const isMobile = (uaData && uaData.mobile) || /mobi|android|iphone|ipad|tablet/i.test(ua);
+  const isTablet = /tablet|ipad/i.test(ua);
+  const deviceType = isMobile ? (isTablet ? 'Tablet' : 'Mobile') : 'Desktop';
+
+  // os and browser (best-effort)
+  let os = 'Unknown', browser = 'Unknown';
+  if (uaData && uaData.brands) {
+    // modern API
+    browser = uaData.brands.map(b=>b.brand+" "+b.version).join(", ");
+    // OS via platform
+    os = navigator.platform || 'Unknown';
+  } else {
+    // fallback parsing (lightweight)
+    if (/windows nt 10/i.test(ua)) os = 'Windows 10';
+    else if (/windows nt 6.1/i.test(ua)) os = 'Windows 7';
+    else if (/mac os x/i.test(ua)) os = 'macOS';
+    else if (/android/i.test(ua)) os = 'Android';
+    else if (/iphone|ipad|ipod/i.test(ua)) os = 'iOS';
+    else os = navigator.platform || 'Unknown';
+    // browser
+    if (/chrome\/\d+/i.test(ua)) browser = (ua.match(/(chrome)\/([\d\.]+)/i)||[]).slice(1).join(' ');
+    else if (/firefox\/\d+/i.test(ua)) browser = (ua.match(/(firefox)\/([\d\.]+)/i)||[]).slice(1).join(' ');
+    else if (/safari\/\d+/i.test(ua) && /version\/\d+/i.test(ua)) browser = (ua.match(/version\/([\d\.]+).*safari/i)||[])[0] || 'Safari';
+    else browser = 'Unknown';
+  }
+
+  // screen
+  const scr = `${screen.width}×${screen.height} (avail ${screen.availWidth}×${screen.availHeight}) pixel`;
+
+  // network
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
+  let netInfo = 'Unknown';
+  if (connection) {
+    netInfo = `${connection.effectiveType || ''} — down:${connection.downlink || 'n/a'}Mbps rtt:${connection.rtt || 'n/a'}ms`;
+  } else {
+    netInfo = 'Not supported';
+  }
+
+  // timezone and locale
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+  const now = new Date().toString();
+
+  // populate DOM
+  document.getElementById('device-type').textContent = deviceType;
+  document.getElementById('os').textContent = os;
+  document.getElementById('browser').textContent = browser;
+  document.getElementById('screen').textContent = scr;
+  document.getElementById('netinfo').textContent = netInfo;
+  document.getElementById('timeinfo').textContent = `${now} · ${tz}`;
+  document.getElementById('ua').textContent = ua;
+
+  // permissions quick check
+  updatePermsUI();
+  // fetch public IP (best-effort)
+  fetchPublicIP();
+  document.getElementById('status').textContent = 'Holat: tez aniqlash tugadi — batafsil uchun ruxsat so‘rang.';
+}
+
+function updatePermsUI(){
+  const perms = ['geolocation','camera','microphone','notifications'];
+  const parts = [];
+  if (!navigator.permissions) {
+    parts.push('Permissions API not supported in this browser.');
+    document.getElementById('perms-list').textContent = parts.join(' ');
+    return;
+  }
+  Promise.all(perms.map(p=>navigator.permissions.query({name:p}).then(s=>{
+    return `${p}: ${s.state}`;
+  }).catch(()=>`${p}: unknown`)))
+    .then(results=>{
+      document.getElementById('perms-list').textContent = results.join(' · ');
+    });
+}
+
+async function askPermissions(){
+  // Ask for geolocation and then media permissions
+  document.getElementById('status').textContent = 'Holat: ruxsat so‘ralmoqda... brauzer oynasiga eʼtibor bering.';
+  try {
+    // geolocation
+    const gotGeo = await requestGeolocation();
+    if (gotGeo) {
+      document.getElementById('status').textContent = 'Geolocation ruxsati olindi.';
+    } else {
+      document.getElementById('status').textContent = 'Geolocation ruxsati olinmadi yoki rad etildi.';
+    }
+
+    // request media (camera + mic) only as demo if user agrees
+    // we ask for both to show permission flow; user can deny
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      // if success, stop tracks immediately (we only needed permission)
+      mediaStream.getTracks().forEach(t=>t.stop());
+      document.getElementById('status').textContent += ' Kamera/mikrofon ruxsati olindi (sinov).';
+    } catch (mediaErr) {
+      document.getElementById('status').textContent += ' Kamera/mikrofon ruxsati olinmadi.';
+    }
+
+    updatePermsUI();
+  } catch(e){
+    document.getElementById('status').textContent = 'Xatolik: ' + (e && e.message ? e.message : e);
+  }
+}
+
+function requestGeolocation(){
+  return new Promise((resolve)=>{
+    if (!navigator.geolocation) {
+      resolve(false);
+      return;
+    }
+    // this will trigger browser permission prompt
+    navigator.geolocation.getCurrentPosition(pos=>{
+      // show coords
+      const coords = pos.coords;
+      const coordsText = `Lat: ${coords.latitude.toFixed(6)}, Lon: ${coords.longitude.toFixed(6)} (accuracy ${coords.accuracy}m)`;
+      document.getElementById('timeinfo').textContent += ' · ' + coordsText;
+      resolve(true);
+    }, err=>{
+      console.warn('Geolocation error', err);
+      resolve(false);
+    }, { enableHighAccuracy: false, timeout: 10000 });
+  });
+}
+
+async function fetchPublicIP(){
+  const ipEl = document.getElementById('ip');
+  const note = document.getElementById('ip-note');
+  ipEl.textContent = 'Yuklanmoqda...';
+  try {
+    // NOTE: you can replace this with your preferred IP API
+    const resp = await fetch('https://api.ipify.org?format=json');
+    if (!resp.ok) throw new Error('IP API xatosi');
+    const data = await resp.json();
+    ipEl.textContent = data.ip || 'No IP';
+    note.textContent = 'Public IP — bu tashqi (internet) manzilingiz. Agar siz lokal tarmoqda boʻlsangiz, natija router manzili bo‘lishi mumkin.';
+  } catch (e){
+    ipEl.textContent = 'Olinmadi';
+    note.textContent = 'IP olish muvaffaqiyatsiz. Bu brauzer siyosati yoki tarmoq holati tufayli bo‘lishi mumkin.';
+  }
+}
+
+// wire buttons
+document.getElementById('detect-basic').addEventListener('click', detectBasic);
+document.getElementById('ask-perms').addEventListener('click', askPermissions);
+document.getElementById('request-geo').addEventListener('click', async ()=>{
+  document.getElementById('status').textContent = 'Geolocation uchun ruxsat so‘ralmoqda...';
+  await requestGeolocation();
+  updatePermsUI();
+});
+document.getElementById('request-media').addEventListener('click', async ()=>{
+  document.getElementById('status').textContent = 'Media (kamera/mikrofon) uchun ruxsat so‘ralmoqda...';
+  try{
+    const s = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+    s.getTracks().forEach(t=>t.stop());
+    document.getElementById('status').textContent = 'Media ruxsati olindi (sinov).';
+  }catch(e){
+    document.getElementById('status').textContent = 'Media ruxsati olinmadi.';
+  }
+  updatePermsUI();
+});
+
+// auto-run basic detection on load
+window.addEventListener('load', ()=>{
+  detectBasic();
+  updatePermsUI();
+});
+</script>
+</body>
+</html>
